@@ -1,42 +1,109 @@
 # Ktor-server
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
+API предоставляет следующие endpoints:
 
-Here are some useful links to get you started:
+GET /items - Получить все элементы
 
-- [Ktor Documentation](https://ktor.io/docs/home.html)
-- [Ktor GitHub page](https://github.com/ktorio/ktor)
-- The [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). You'll need
-  to [request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up) to join.
+GET /items/{id} - Получить элемент по ID
 
-## Features
+POST /items - Создать новый элемент
 
-Here's a list of features included in this project:
+DELETE /items/{id} - Удалить элемент по ID
 
-| Name                                                                   | Description                                                                        |
-| ------------------------------------------------------------------------|------------------------------------------------------------------------------------ |
-| [Routing](https://start.ktor.io/p/routing)                             | Provides a structured routing DSL                                                  |
-| [Content Negotiation](https://start.ktor.io/p/content-negotiation)     | Provides automatic content conversion according to Content-Type and Accept headers |
-| [kotlinx.serialization](https://start.ktor.io/p/kotlinx-serialization) | Handles JSON serialization using kotlinx.serialization library                     |
+ Технологии
+Kotlin - Язык программирования
 
-## Building & Running
+Ktor - Фреймворк для построения асинхронных серверов
 
-To build or run the project, use one of the following tasks:
+Netty - Серверный движок
 
-| Task                          | Description                                                          |
-| -------------------------------|---------------------------------------------------------------------- |
-| `./gradlew test`              | Run the tests                                                        |
-| `./gradlew build`             | Build everything                                                     |
-| `buildFatJar`                 | Build an executable JAR of the server with all dependencies included |
-| `buildImage`                  | Build the docker image to use with the fat JAR                       |
-| `publishImageToLocalRegistry` | Publish the docker image locally                                     |
-| `run`                         | Run the server                                                       |
-| `runDocker`                   | Run using the local docker image                                     |
+Kotlinx Serialization - Сериализация JSON
 
-If the server starts successfully, you'll see the following output:
+🛠 Установка и запуск
+Требования
+JDK 11 или выше
 
-```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
-```
+Kotlin 1.6+
+
+Сборка и запуск
+Клонируйте репозиторий
+
+Соберите проект:
+
+bash
+./gradlew build
+Запустите сервер:
+
+bash
+./gradlew run
+Или запустите напрямую через main функцию в IDE.
+
+Сервер будет доступен по адресу: http://localhost:8080
+
+ Использование API
+Получить все элементы
+bash
+curl -X GET http://localhost:8080/items
+Ответ:
+
+json
+[
+  {"id": 1, "name": "First item"},
+  {"id": 2, "name": "Second item"}
+]
+Получить элемент по ID
+bash
+curl -X GET http://localhost:8080/items/1
+Ответ:
+
+json
+{"id": 1, "name": "First item"}
+Создать новый элемент
+bash
+curl -X POST "http://localhost:8080/items?name=New%20Item"
+Ответ:
+
+json
+{"id": 3, "name": "New Item"}
+Удалить элемент
+bash
+curl -X DELETE http://localhost:8080/items/1
+Ответ:
+
+text
+Item deleted
+ Структура проекта
+text
+src/
+└── main/
+    └── kotlin/
+        └── com/
+            └── example/
+                └── Main.kt - Основной файл приложения
+ Модель данных
+kotlin
+@Serializable
+data class Item(val id: Int, val name: String)
+ Конфигурация
+Порт: 8080
+
+Хост: 0.0.0.0 (доступен извне)
+
+Content-Type: application/json
+
+ Коды ответов
+200 OK - Успешный запрос
+
+201 Created - Элемент создан
+
+400 Bad Request - Неверный запрос
+
+404 Not Found - Элемент не найден
+
+ Примечания
+Данные хранятся в памяти и сбрасываются при перезапуске сервера
+
+ID генерируются автоматически как максимальный существующий ID + 1
+
+Для создания элемента требуется query-параметр name
 
